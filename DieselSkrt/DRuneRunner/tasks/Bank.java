@@ -22,7 +22,7 @@ public class Bank extends Task<ClientContext> {
 
     @Override
     public boolean activate(){
-        return ctx.inventory.select().id(ESSENCE).isEmpty() && ctx.bank.nearest().tile().distanceTo(ctx.players.local()) <= 2;
+        return !essenceInInvent() && ctx.bank.nearest().tile().distanceTo(ctx.players.local()) <= 2;
     }
 
     /**

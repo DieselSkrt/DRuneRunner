@@ -24,7 +24,7 @@ public class GoToBank extends Task<ClientContext> {
 
     @Override
     public boolean activate(){
-        return ctx.inventory.select().id(ESSENCE).isEmpty() && ctx.objects.select().id(PORTALID).isEmpty() && !ctx.bank.opened();
+        return !essenceInInvent() && !portalNear() && !ctx.bank.opened();
     }
 
     @Override

@@ -20,21 +20,25 @@ public class EnterPortal extends Task<ClientContext> {
     @Override
     public boolean activate() {
         Trade t = new Trade(ctx);
-        if (!ctx.objects.select().id(PORTALID).isEmpty())
-            if (ctx.inventory.select().id(ESSENCE).isEmpty()) if (!t.opened()) return true;
+        if (portalNear())
+            if (!essenceInInvent()) if (!t.opened()) return true;
         return false;
     }
 
     @Override
     public void execute() {
         DRuneRunner.STATUS = "Entering portal";
-        GameObject portalObject = ctx.objects.select().id(PORTALID).poll();
+        try {
+            GameObject portalObject = ctx.objects.select().id(PORTALID).poll();
 
-        if(portalObject.inViewport()){
-            portalObject.interact("Use");
-        }else{
-            ctx.movement.step(portalObject);
-            ctx.camera.turnTo(portalObject);
+            if (portalObject.inViewport()) {
+                portalObject.interact("Use");
+            } else {
+                ctx.movement.step(portalObject);
+                ctx.camera.turnTo(portalObject);
+            }
+        }catch(NullPointerException n){
+            System.out.println("Nullpointer at entering portal");
         }
 
 

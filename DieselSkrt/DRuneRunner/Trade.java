@@ -181,7 +181,7 @@ public class Trade extends ItemQuery<Item> {
         return list;
     }
 
-    private boolean firstOpened() {
+    public boolean firstOpened() {
         return ctx.widgets.component(WIDGET, ACCEPT_FIRST).visible();
     }
 

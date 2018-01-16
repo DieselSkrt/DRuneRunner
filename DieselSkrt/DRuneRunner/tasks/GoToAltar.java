@@ -28,7 +28,7 @@ public class GoToAltar extends Task<ClientContext> {
 
     @Override
     public boolean activate(){
-        return ctx.players.name(DRuneRunner.CRAFTER_USERNAME).isEmpty() && !ctx.inventory.select().id(ESSENCE).isEmpty() && ctx.objects.select().id(RUINSID).isEmpty();
+        return !crafterNear() && essenceInInvent() && !ruinsNear();
     }
 
     /**

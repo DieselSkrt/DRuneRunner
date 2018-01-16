@@ -16,14 +16,13 @@ public class EnterRuins extends Task<ClientContext> {
 
     @Override
     public boolean activate() {
-        return !ctx.objects.select().id(RUINSID).isEmpty() && !ctx.inventory.select().id(ESSENCE).isEmpty();
+        return ruinsNear() && essenceInInvent();
     }
 
     @Override
     public void execute() {
         DRuneRunner.STATUS = "Entering ruins";
         GameObject altar = ctx.objects.select().id(RUINSID).poll();
-
 
         if(altar.inViewport()){
             altar.interact("Enter");
