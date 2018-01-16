@@ -20,4 +20,65 @@ public abstract class Task<C extends ClientContext> extends ClientAccessor {
 
     public abstract boolean activate();
     public abstract void execute();
+
+    public boolean portalNear(){
+        try{
+         if( ctx.objects.select().id(PORTALID).isEmpty()){
+             return false;
+         }else{
+             return true;
+         }
+        }catch(Exception e){
+            System.out.println("Exception thrown at portalnear");
+        }
+        return false;
+    }
+    public boolean essenceInInvent(){
+        try{
+            if(ctx.inventory.select().id(ESSENCE).isEmpty()){
+                return false;
+            }else{
+                return true;
+            }
+        }catch(Exception e){
+            System.out.println("Exception thrown at essencininvent");
+        }
+        return false;
+    }
+    public boolean ruinsNear(){
+        try{
+            if(ctx.objects.select().id(RUINSID).isEmpty()){
+                return false;
+            }else{
+                return true;
+            }
+        }catch(Exception e){
+            System.out.println("Exception thrown at ruinsnear");
+        }
+        return false;
+    }
+    public boolean crafterNear(){
+        try{
+            if(ctx.players.name(DRuneRunner.CRAFTER_USERNAME).isEmpty()){
+                return false;
+            }else{
+                return true;
+            }
+        }catch(Exception e){
+            System.out.println("Exception thrown at crafterNear");
+        }
+        return false;
+    }
+    public boolean craftAltarNear(){
+        try{
+            if(ctx.objects.select().id(craftAltar).isEmpty()){
+                return false;
+            }else{
+                return true;
+            }
+        }catch(Exception e){
+            System.out.println("Exception thrown at craftaltarnear");
+        }
+        return false;
+    }
 }

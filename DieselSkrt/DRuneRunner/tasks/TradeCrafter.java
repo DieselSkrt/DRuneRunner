@@ -23,10 +23,12 @@ public class TradeCrafter extends Task<ClientContext> {
      * - Essence in invent
      * */
 
+    public final Trade trade = new Trade(ctx);
+
 
     @Override
     public boolean activate(){
-        return !ctx.inventory.select().id(ESSENCE).isEmpty() && !ctx.objects.select().id(craftAltar).isEmpty();
+        return essenceInInvent() && craftAltarNear() || trade.opened();
 
     }
 
@@ -39,14 +41,16 @@ public class TradeCrafter extends Task<ClientContext> {
     public void execute(){
         DRuneRunner.STATUS = "Trading crafter";
 
-        final Trade trade = new Trade(ctx);
+
 
         if(!ctx.players.select().name(DRuneRunner.CRAFTER_USERNAME).poll().inViewport()){
             ctx.movement.step(ctx.players.select().name(DRuneRunner.CRAFTER_USERNAME).poll());
             ctx.camera.turnTo(ctx.players.select().name(DRuneRunner.CRAFTER_USERNAME).poll());
         }
 
-        trade.tradeWith(ctx.players.select().name(DRuneRunner.CRAFTER_USERNAME).poll());
+        if(!trade.opened()) {
+            trade.tradeWith(ctx.players.select().name(DRuneRunner.CRAFTER_USERNAME).poll());
+        }
 
         if(!Condition.wait(new Condition.Check(){
             public boolean poll(){
@@ -55,19 +59,21 @@ public class TradeCrafter extends Task<ClientContext> {
         }, 100, 100))
             return;
 
-        trade.offerAll(ctx.inventory.select().id(ESSENCE).poll());
-        trade.accept();
+        if(trade.firstOpened()) {
+            trade.offerAll(ctx.inventory.select().id(ESSENCE).poll());
+            trade.accept();
+        }
 
         if(trade.secondOpened()){
             trade.accept();
         }
 
-//        if(!Condition.wait(new Condition.Check(){
-//            public boolean poll(){
-//                return trade.opened() && trade.hasPlayerAccepted();
-//            }
-//        }, 50, 100))
-//            trade.decline();
-//        trade.accept();
+        if(!Condition.wait(new Condition.Check(){
+            public boolean poll(){
+                return trade.opened() && trade.hasPlayerAccepted();
+            }
+        }, 50, 100))
+            trade.decline();
+        trade.accept();
     }
 }
